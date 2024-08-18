@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Services\AuthServiceInterface;
+use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\LoginUserRequest;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -15,15 +17,9 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function register(Request $request)
+    public function register(RegisterUserRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user = $this->authService->register($validatedData);
+        $user = $this->authService->register($request->validated());
 
         return response()->json([
             'access_token' => $user->createToken('auth_token')->plainTextToken,
@@ -31,14 +27,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(LoginUserRequest $request)
     {
-        $validatedData = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-        $token = $this->authService->login($validatedData);
+        $token = $this->authService->login($request->validated());
 
         if (!$token) {
             return response()->json(['message' => 'Invalid credentials'], 401);
