@@ -8,40 +8,19 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CategoryPolicy
 {
-    use HandlesAuthorization;
-
-    public function viewAny(User $user)
-    {
-        return true; // Customize according to your needs
-    }
-
-    public function view(User $user, Category $category)
-    {
-        return true; // Customize according to your needs
-    }
-
     public function create(User $user)
     {
-        return $user->isLeader(); // Assuming you have a method to check if user is a leader
+        return false; 
     }
-
+    
     public function update(User $user, Category $category)
     {
-        return $user->isLeader();
+        return false; 
     }
-
+    
     public function delete(User $user, Category $category)
     {
-        return $user->isLeader();
+        return false; 
     }
-
-    public function restore(User $user, Category $category)
-    {
-        return $user->isLeader();
-    }
-
-    public function forceDelete(User $user, Category $category)
-    {
-        return false; // Disable force delete
-    }
+    
 }
