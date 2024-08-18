@@ -37,4 +37,8 @@ class TeamService implements TeamServiceInterface
             $user->notify(new \App\Notifications\RemovedFromTeam($team));
         }
     }
+    public function deleteTeam(Team $team)
+    {
+        $team->delete(); 
+    }
 }

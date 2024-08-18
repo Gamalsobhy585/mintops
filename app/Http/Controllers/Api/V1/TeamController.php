@@ -49,5 +49,21 @@ class TeamController extends Controller
 
         return response()->json(['message' => 'Member removed from the team.']);
     }
+    public function index()
+    {
+        $user = Auth::user();
+        $teams = $user->teams; 
+
+        return new TeamCollection($teams);
+    }
+
+    public function destroy(Team $team)
+    {
+        $this->authorize('delete', $team); 
+
+        $this->teamService->deleteTeam($team);
+
+        return response()->json(['message' => 'Team deleted successfully.']);
+    }
 }
 

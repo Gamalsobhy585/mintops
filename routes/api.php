@@ -15,8 +15,10 @@ Route::prefix('v1')->group(function () {
     Route::get('categories', [CategoryController::class, 'index'])->middleware('auth:sanctum');
     
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('teams', [TeamController::class, 'store']);
+        Route::get('teams', [TeamController::class, 'index']); 
+        Route::post('teams/create', [TeamController::class, 'store']); 
         Route::post('teams/{team}/members/{user}', [TeamController::class, 'addMember']);
         Route::delete('teams/{team}/members/{user}', [TeamController::class, 'removeMember']);
+        Route::delete('teams/{team}', [TeamController::class, 'destroy']); 
     });
 });
