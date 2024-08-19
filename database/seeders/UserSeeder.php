@@ -9,19 +9,17 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+   
     public function run(): void
     {
-        // Create users
+      
         $users = [
-            ['name' => 'Islam Walid', 'email' => 'islamwalid@gmail.com', 'password' => 'IslamWalid123@'],
-            ['name' => 'NourEldin Ahmed', 'email' => 'noureldinahmed@gmail.com', 'password' => 'NourEldinAhmed123@'],
-            ['name' => 'Hisham Anwar', 'email' => 'hishamanwar@gmail.com', 'password' => 'HishamAnwar123@'],
-            ['name' => 'Mohamed Abdelaziz', 'email' => 'mohamedabdelaziz@gmail.com', 'password' => 'MohamedAbdelaziz123@'],
-            ['name' => 'Ahmed Assem', 'email' => 'ahmedassem@gmail.com', 'password' => 'AhmedAssem123@'],
-            ['name' => 'Gamal Sobhy', 'email' => 'gamalsobhy@gmail.com', 'password' => 'GamalSobhy123@'],
+            ['name' => 'Islam Walid', 'email' => 'islamwalid@gmail.com', 'password' => 'IslamWalid123@', 'password_confirmation' => 'IslamWalid123@', 'role' => 'member'],
+            ['name' => 'NourEldin Ahmed', 'email' => 'noureldinahmed@gmail.com', 'password' => 'NourEldinAhmed123@', 'password_confirmation' => 'NourEldinAhmed123@', 'role' => 'member'],
+            ['name' => 'Hisham Anwar', 'email' => 'hishamanwar@gmail.com', 'password' => 'HishamAnwar123@', 'password_confirmation' => 'HishamAnwar123@', 'role' => 'leader'],
+            ['name' => 'Mohamed Abdelaziz', 'email' => 'mohamedabdelaziz@gmail.com', 'password' => 'MohamedAbdelaziz123@', 'password_confirmation' => 'MohamedAbdelaziz123@', 'role' => 'member'],
+            ['name' => 'Ahmed Assem', 'email' => 'ahmedassem@gmail.com', 'password' => 'AhmedAssem123@', 'password_confirmation' => 'AhmedAssem123@', 'role' => 'member'],
+            ['name' => 'Gamal Sobhy', 'email' => 'gamalsobhy@gmail.com', 'password' => 'GamalSobhy123@', 'password_confirmation' => 'GamalSobhy123@', 'role' => 'leader'],
         ];
 
         $createdUsers = [];
@@ -31,10 +29,11 @@ class UserSeeder extends Seeder
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'password' => Hash::make($user['password']),
+                'role' => $user['role'], 
             ]);
         }
 
-        // Create teams and assign leaders
+   
         $teamData = [
             ['name' => 'Team A', 'leader' => 'Hisham Anwar'],
             ['name' => 'Team B', 'leader' => 'Gamal Sobhy'],
@@ -46,7 +45,7 @@ class UserSeeder extends Seeder
                 'leader_id' => $createdUsers[$team['leader']]->id,
             ]);
 
-            // Assign the leader to the team
+      
             $teamRecord->users()->attach($createdUsers[$team['leader']]->id);
         }
     }
