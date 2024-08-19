@@ -10,7 +10,7 @@ class Task extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['title', 'description', 'start_date', 'end_date', 'status', 'priority', 'category_id'];
+    protected $fillable = ['title', 'description', 'start_date', 'end_date', 'status', 'priority', 'category_id', 'user_id', 'team_id'];
 
     public function category()
     {
@@ -20,5 +20,10 @@ class Task extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 }

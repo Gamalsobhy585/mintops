@@ -95,4 +95,16 @@ class TaskController extends Controller
 
         return response()->json($task, 200);
     }
+    public function index(Request $request)
+{
+    $user = $request->user();
+    
+    if ($user->role === 'leader') {
+        $tasks = Task::where('team_id', $user->team_id)->get();
+    } else {
+        $tasks = Task::where('user_id', $user->id)->get();
+    }
+
+    return response()->json($tasks, 200);
+}
 }

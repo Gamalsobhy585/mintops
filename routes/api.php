@@ -21,6 +21,8 @@ Route::prefix('v1')->group(function () {
 
         // Task Routes
         Route::post('tasks', [TaskController::class, 'createTask']);
+        Route::get('tasks', [TaskController::class, 'index']); 
+
         Route::put('tasks/{task}', [TaskController::class, 'editTask']);
         Route::delete('tasks/{task}', [TaskController::class, 'deleteTask']);
         Route::patch('tasks/{task}/restore', [TaskController::class, 'restoreTask']);

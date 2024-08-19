@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -26,5 +27,10 @@ class Team extends Model
     {
         // Adjust the maximum number as needed
         return false;
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 }

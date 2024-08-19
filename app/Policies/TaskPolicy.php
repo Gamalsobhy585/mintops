@@ -29,7 +29,15 @@ class TaskPolicy
 
     public function view(User $user, Task $task)
     {
-        return $user->teams()->whereHas('tasks', function ($query) use ($task) {
+        // Allow the leader to view any task within their team
+        if ($user->role === 'leader') {
+            return $user->teams()->whereHas('tasks', function ($query) use ($task) {
+                $query->where('id', $task->id);
+            })->exists();
+        }
+
+        // Allow team members to view tasks they are assigned to or tasks within their team
+        return $user->id === $task->user_id || $user->teams()->whereHas('tasks', function ($query) use ($task) {
             $query->where('id', $task->id);
         })->exists();
     }

@@ -20,7 +20,8 @@ return new class extends Migration
             $table->enum('status', ['completed', 'in progress', 'not started']);
             $table->enum('priority', ['low', 'medium', 'high']);
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // user assigned to task
+            $table->foreignId('team_id')->constrained()->onDelete('cascade'); // team the task belongs to
             $table->softDeletes();
             $table->timestamps();
         });

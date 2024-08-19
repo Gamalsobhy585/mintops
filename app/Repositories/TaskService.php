@@ -5,12 +5,9 @@ namespace App\Services;
 use App\Models\Task;
 use App\Models\User;
 use App\Repositories\TaskRepositoryInterface;
-
 use App\Notifications\TaskAssignedNotification;
 use App\Notifications\TaskReassignedNotification;
 use App\Notifications\TaskRemovedNotification;
-
-
 
 class TaskService implements TaskServiceInterface
 {
@@ -23,6 +20,7 @@ class TaskService implements TaskServiceInterface
 
     public function createTask(array $data)
     {
+        // Ensure that the task is assigned to a team and a user
         return $this->taskRepository->create($data);
     }
 
