@@ -4,45 +4,33 @@ namespace App\Policies;
 
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TaskPolicy
 {
-    use HandlesAuthorization;
-
-    public function viewAny(User $user)
-    {
-        return true;
-    }
-
-    public function view(User $user, Task $task)
-    {
-        return $user->isLeader() || $task->user_id == $user->id;
-    }
-
     public function create(User $user)
     {
-        return $user->isLeader();
+        return $user->role === 'leader';
     }
 
     public function update(User $user, Task $task)
     {
-        return $user->isLeader() || $task->user_id == $user->id;
+        return $user->id === $task->user_id || $user->id === $task->user->leader->id;
     }
 
     public function delete(User $user, Task $task)
     {
-        return $user->isLeader() || $task->user_id == $user->id;
+        return $user->role === 'leader' && $user->id === $task->user->leader->id;
     }
 
-    public function restore(User $user, Task $task)
+    public function assign(User $user, Task $task)
     {
-        return $user->isLeader();
+        return $user->role === 'leader' && $user->id === $task->user->leader->id;
     }
 
-    public function forceDelete(User $user, Task $task)
+    public function view(User $user, Task $task)
     {
-        return false; // Disable force delete
+        return $user->teams()->whereHas('tasks', function ($query) use ($task) {
+            $query->where('id', $task->id);
+        })->exists();
     }
 }
-

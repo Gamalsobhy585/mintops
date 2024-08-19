@@ -19,7 +19,9 @@ class AuthController extends Controller
 
     public function register(RegisterUserRequest $request)
     {
-        $user = $this->authService->register($request->validated());
+        $data = $request->validated(); 
+
+        $user = $this->authService->register($data);
 
         return response()->json([
             'access_token' => $user->createToken('auth_token')->plainTextToken,
@@ -48,3 +50,4 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
 }
+

@@ -18,7 +18,7 @@ class TeamPolicy
 
     public function create(User $user)
     {
-        return $user->isLeader();
+        return $user->role === 'leader';
     }
 
     public function update(User $user, Team $team)
