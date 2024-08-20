@@ -25,7 +25,7 @@ class Team extends Model
 
     public function hasMaxMembers(): bool
     {
-        // Adjust the maximum number as needed
+       
         return false;
     }
 

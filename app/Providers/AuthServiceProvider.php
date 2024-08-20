@@ -20,9 +20,6 @@ class AuthServiceProvider extends ServiceProvider
         Task::class => TaskPolicy::class,
     ];
 
-    /**
-     * Register any authentication / authorization services.
-     */
     public function boot(): void
     {
         //

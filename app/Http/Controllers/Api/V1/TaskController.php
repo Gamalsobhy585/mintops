@@ -42,21 +42,29 @@ class TaskController extends Controller
     public function deleteTask($id)
     {
         $task = Task::findOrFail($id);
+    
+       
         $this->authorize('delete', $task);
-
+    
+        
         $this->taskService->deleteTask($id);
-
+    
         return response()->json(null, 204);
     }
+    
+    
 
     public function restoreTask($id)
     {
-        $this->authorize('restore', Task::class);
-
+        $task = Task::withTrashed()->findOrFail($id);
+    
+        $this->authorize('restore', $task);
+    
         $task = $this->taskService->restoreTask($id);
-
+    
         return response()->json($task, 200);
     }
+    
 
     public function assignTaskToMember(Request $request, $id)
     {

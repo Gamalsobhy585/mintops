@@ -19,8 +19,11 @@ class TaskPolicy
 
     public function delete(User $user, Task $task)
     {
-        return $user->role === 'leader' && $user->id === $task->user->leader->id;
+        $teamLeader = $task->team->leader ?? null;
+    
+        return $teamLeader && $user->id === $teamLeader->id;
     }
+    
 
     public function assign(User $user, Task $task)
     {
@@ -29,16 +32,21 @@ class TaskPolicy
 
     public function view(User $user, Task $task)
     {
-        // Allow the leader to view any task within their team
         if ($user->role === 'leader') {
             return $user->teams()->whereHas('tasks', function ($query) use ($task) {
                 $query->where('id', $task->id);
             })->exists();
         }
 
-        // Allow team members to view tasks they are assigned to or tasks within their team
         return $user->id === $task->user_id || $user->teams()->whereHas('tasks', function ($query) use ($task) {
             $query->where('id', $task->id);
         })->exists();
     }
+    public function restore(User $user, Task $task)
+{
+    $teamLeader = $task->team->leader ?? null;
+
+    return $teamLeader && $user->id === $teamLeader->id;
+}
+
 }

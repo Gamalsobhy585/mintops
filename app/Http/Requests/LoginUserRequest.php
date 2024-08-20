@@ -8,7 +8,7 @@ class LoginUserRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; // Authorization logic can be added here
+        return true; 
     }
 
     public function rules()

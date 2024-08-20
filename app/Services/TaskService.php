@@ -20,13 +20,11 @@ class TaskService implements TaskServiceInterface
 
    public function createTask(array $data)
 {
-    // Ensure 'team_id' exists in the $data array
     if (!array_key_exists('team_id', $data)) {
         throw new \Exception('Team ID is required.');
     }
 
-    // Add user_id to the data array based on logic (as we discussed before)
-    $data['user_id'] = $data['user_id'] ?? auth()->id(); // Assuming the authenticated user is the leader or a member
+    $data['user_id'] = $data['user_id'] ?? auth()->id(); 
 
     return $this->taskRepository->create($data);
 }
