@@ -18,11 +18,19 @@ class TaskService implements TaskServiceInterface
         $this->taskRepository = $taskRepository;
     }
 
-    public function createTask(array $data)
-    {
-        // Ensure that the task is assigned to a team and a user
-        return $this->taskRepository->create($data);
+   public function createTask(array $data)
+{
+    // Ensure 'team_id' exists in the $data array
+    if (!array_key_exists('team_id', $data)) {
+        throw new \Exception('Team ID is required.');
     }
+
+    // Add user_id to the data array based on logic (as we discussed before)
+    $data['user_id'] = $data['user_id'] ?? auth()->id(); // Assuming the authenticated user is the leader or a member
+
+    return $this->taskRepository->create($data);
+}
+
 
     public function editTask(int $taskId, array $data)
     {
@@ -45,7 +53,6 @@ class TaskService implements TaskServiceInterface
         $task->user_id = $userId;
         $task->save();
     
-        // Notify the user about the assignment
         User::find($userId)->notify(new TaskAssignedNotification($task));
         
         return $task;
@@ -58,7 +65,6 @@ class TaskService implements TaskServiceInterface
             $task->user_id = null;
             $task->save();
     
-            // Notify the user about the removal
             User::find($userId)->notify(new TaskRemovedNotification($task));
         }
         return $task;
@@ -73,4 +79,24 @@ class TaskService implements TaskServiceInterface
     
         return $task;
     }
+    public function index(array $data)
+    {
+        $user = auth()->user();
+    
+        if ($user->role === 'leader') {
+            $teamId = $user->leadingTeams->first()->id ?? null; 
+        } else {
+            if ($user->teams->isEmpty()) {
+                throw new \Exception('User does not belong to any team.');
+            }
+            $teamId = $user->teams->first()->id ?? null; 
+        }
+    
+        if ($teamId === null) {
+            throw new \Exception('Team ID is not set. Please ensure that the user is properly assigned to a team.');
+        }
+    
+        return $this->taskRepository->getTasksByTeamId($teamId);
+    }
+    
 }

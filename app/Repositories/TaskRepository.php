@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Task;
 
@@ -34,5 +35,29 @@ class TaskRepository implements TaskRepositoryInterface
     public function find(int $id)
     {
         return Task::findOrFail($id);
+    }
+    public function getTasksByTeamId($teamId)
+    {
+        return Task::whereExists(function ($query) use ($teamId) {
+            $query->select(DB::raw(1))
+                ->from('users')
+                ->whereColumn('tasks.user_id', 'users.id')
+                ->whereExists(function ($query) use ($teamId) {
+                    $query->select(DB::raw(1))
+                        ->from('teams')
+                        ->join('team_user', 'teams.id', '=', 'team_user.team_id')
+                        ->whereColumn('users.id', 'team_user.user_id')
+                        ->where('teams.id', $teamId); 
+                })
+                ->whereNull('users.deleted_at');
+        })
+        ->whereNull('tasks.deleted_at')
+        ->get();
+    }
+    
+
+    public function getTasksByUserId(int $userId)
+    {
+        return Task::where('user_id', $userId)->get();
     }
 }

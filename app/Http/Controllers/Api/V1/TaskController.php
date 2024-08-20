@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Services\TaskServiceInterface;
+use App\Http\Controllers\Controller;
+use App\Services\TaskService;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Http\Requests\CreateTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
     protected $taskService;
 
-    public function __construct(TaskServiceInterface $taskService)
+    public function __construct(TaskService $taskService)
     {
         $this->taskService = $taskService;
     }
@@ -25,20 +27,12 @@ class TaskController extends Controller
         return response()->json($task, 201);
     }
 
-    public function editTask(Request $request, $id)
+    public function editTask(UpdateTaskRequest $request, $id)
     {
         $task = Task::findOrFail($id);
         $this->authorize('update', $task);
 
-        $validated = $request->validate([
-            'title' => 'string|max:255',
-            'description' => 'string',
-            'start_date' => 'date',
-            'end_date' => 'date',
-            'status' => 'in:completed,in progress,not started',
-            'priority' => 'in:low,medium,high',
-            'category_id' => 'exists:categories,id',
-        ]);
+        $validated = $request->validated();
 
         $task = $this->taskService->editTask($id, $validated);
 
@@ -95,16 +89,12 @@ class TaskController extends Controller
 
         return response()->json($task, 200);
     }
+
     public function index(Request $request)
 {
-    $user = $request->user();
-    
-    if ($user->role === 'leader') {
-        $tasks = Task::where('team_id', $user->team_id)->get();
-    } else {
-        $tasks = Task::where('user_id', $user->id)->get();
-    }
+    $tasks = $this->taskService->index($request->all());
 
-    return response()->json($tasks, 200);
+    return response()->json($tasks);
 }
+
 }

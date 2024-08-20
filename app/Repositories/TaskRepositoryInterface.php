@@ -9,4 +9,6 @@ interface TaskRepositoryInterface
     public function delete(int $id);
     public function restore(int $id);
     public function find(int $id);
+    public function getTasksByTeamId(int $teamId); 
+    public function getTasksByUserId(int $userId); 
 }

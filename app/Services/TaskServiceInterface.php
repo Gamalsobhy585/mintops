@@ -11,4 +11,5 @@ interface TaskServiceInterface
     public function assignTaskToMember(int $taskId, int $userId);
     public function removeTaskFromMember(int $taskId, int $userId);
     public function reassignTaskToMember(int $taskId, int $newUserId);
+    public function index(array $criteria);
 }
