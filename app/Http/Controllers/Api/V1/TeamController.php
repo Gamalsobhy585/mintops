@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\TeamCollection;
 use App\Http\Resources\TeamResource;
+use App\Http\Resources\UserCollection;
 
 class TeamController extends Controller
 {
@@ -66,6 +67,14 @@ class TeamController extends Controller
         $this->teamService->deleteTeam($team);
 
         return response()->json(['message' => 'Team deleted successfully.']);
+    }
+    public function getMembers(Team $team)
+    {
+        $this->authorize('view', $team);
+
+        $members = $this->teamService->getTeamMembers($team);
+
+        return new UserCollection($members);  
     }
 }
 

@@ -37,5 +37,7 @@ interface TeamServiceInterface
      * @param Team $team
      */
     public function deleteTeam(Team $team);
+    public function getTeamMembers(Team $team);
 }
+
 

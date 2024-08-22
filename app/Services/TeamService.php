@@ -38,4 +38,8 @@ class TeamService implements TeamServiceInterface
     {
         $team->delete(); 
     }
+    public function getTeamMembers(Team $team)
+    {
+        return $team->users()->get();  
+    }
 }

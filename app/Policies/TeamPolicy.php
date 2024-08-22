@@ -13,8 +13,10 @@ class TeamPolicy
 
     public function view(User $user, Team $team)
     {
-        return $user->teams()->contains($team);
+        return $user->teams()->where('teams.id', $team->id)->exists() || $user->id === $team->leader_id;
     }
+    
+    
 
     public function create(User $user)
     {
