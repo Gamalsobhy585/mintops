@@ -9,11 +9,16 @@ class TeamService implements TeamServiceInterface
 {
     public function createTeam(User $leader, array $data): Team
     {
-        return Team::create([
+        $team = Team::create([
             'name' => $data['name'],
             'leader_id' => $leader->id,
         ]);
+    
+        $team->users()->attach($leader->id);
+    
+        return $team;
     }
+    
 
     public function addMember(Team $team, User $user)
     {

@@ -52,8 +52,10 @@ class TeamController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $teams = $user->teams; 
-
+        $teams = Team::whereHas('users', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->orWhere('leader_id', $user->id)->get();
+    
         return new TeamCollection($teams);
     }
 
