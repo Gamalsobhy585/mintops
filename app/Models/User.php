@@ -49,4 +49,8 @@ class User extends Authenticatable
     {
         return $this->leadingTeams()->exists();
     }
+    public function recentlyVisitedCategories()
+    {
+        return $this->hasMany(RecentlyVisitedCategory::class);
+    }
 }

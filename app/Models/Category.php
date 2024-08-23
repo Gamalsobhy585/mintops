@@ -15,4 +15,9 @@ class Category extends Model
     {
         return $this->hasMany(Task::class);
     }
+    public function recentlyVisited()
+{
+    return $this->hasMany(RecentlyVisitedCategory::class);
+}
+
 }

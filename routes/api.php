@@ -16,6 +16,10 @@ Route::prefix('v1')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         //categories routes
         Route::get('categories', [CategoryController::class, 'index']);
+        Route::get('categories/recently-visited', [CategoryController::class, 'recentlyVisited']);
+        Route::get('categories/{id}', [CategoryController::class, 'show']);
+
+
         //teams routes
         Route::get('teams', [TeamController::class, 'index']);
         Route::post('teams/create', [TeamController::class, 'store']);
@@ -37,5 +41,6 @@ Route::prefix('v1')->group(function () {
         Route::delete('tasks/{task}/remove-member/{user}', [TaskController::class, 'removeTaskFromMember']);
         Route::post('tasks/{task}/reassign', [TaskController::class, 'reassignTaskToMember']);
         Route::get('tasks/deleted', [TaskController::class, 'getDeletedTasks']);
+
     });
 });
