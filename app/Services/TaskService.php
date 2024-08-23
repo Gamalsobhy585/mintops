@@ -100,8 +100,10 @@ class TaskService implements TaskServiceInterface
     {
         return Task::find($taskId);
     }
-public function getDeletedTasks(array $criteria = [])
+public function getDeletedTasks(User $user, array $criteria = [])
 {
-    return $this->taskRepository->getDeletedTasks($criteria);
+    return $this->taskRepository->getDeletedTasks($user, $criteria);
 }
+
+
 }

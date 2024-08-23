@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Services\TaskService;
+use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
-
+use Illuminate\Support\Facades\Gate;
 class TaskController extends Controller
 {
     protected $taskService;
@@ -115,8 +116,15 @@ public function showTask($taskId)
 }
 public function getDeletedTasks(Request $request)
 {
-    $tasks = $this->taskService->getDeletedTasks($request->all());
+    $user = auth()->user(); 
+    $criteria = $request->all();
 
-    return response()->json($tasks);
+    $tasks = $this->taskService->getDeletedTasks($user, $criteria);
+
+    $filteredTasks = $tasks->filter(function ($task) use ($user) {
+        return Gate::forUser($user)->allows('viewDeletedTasks', $task);
+    });
+
+    return response()->json($filteredTasks);
 }
 }

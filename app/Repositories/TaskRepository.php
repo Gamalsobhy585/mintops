@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Collection;
 use App\Models\Task;
+use App\Models\User;
 
 class TaskRepository implements TaskRepositoryInterface
 {
@@ -60,18 +61,20 @@ class TaskRepository implements TaskRepositoryInterface
     {
         return Task::where('user_id', $userId)->get();
     }
-    public function getDeletedTasks(array $criteria = [])
+    public function getDeletedTasks(User $user, array $criteria = []): Collection
     {
         $query = Task::onlyTrashed();
-
-        if (isset($criteria['team_id'])) {
-            $query->where('team_id', $criteria['team_id']);
+    
+        foreach ($criteria as $key => $value) {
+            if (in_array($key, ['start_date', 'end_date', 'status', 'priority'])) {
+                $query->where($key, $value);
+            }
         }
-
-        if (isset($criteria['user_id'])) {
-            $query->where('user_id', $criteria['user_id']);
-        }
-
+    
+        $leadingTeams = $user->leadingTeams->pluck('id')->toArray();
+        $query->whereIn('team_id', $leadingTeams);
+    
         return $query->get();
     }
+    
 }

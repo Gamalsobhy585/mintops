@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Providers;
+
 use App\Models\Team;
 use App\Policies\TeamPolicy;
 use App\Models\Task;
 use App\Policies\TaskPolicy;
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -22,6 +23,9 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
+
+        // Define custom gate for viewing deleted tasks
+        Gate::define('view-deleted-tasks', [TaskPolicy::class, 'viewDeletedTasks']);
     }
 }

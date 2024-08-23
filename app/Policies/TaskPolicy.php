@@ -53,4 +53,14 @@ class TaskPolicy
     return $teamLeader && $user->id === $teamLeader->id;
 }
 
+public function viewDeletedTasks(User $user, Task $task)
+{
+    if (!$user->isLeader()) {
+        return false;
+    }
+
+    $leadingTeams = $user->leadingTeams->pluck('id')->toArray();
+    return in_array($task->team_id, $leadingTeams);
+}
+
 }

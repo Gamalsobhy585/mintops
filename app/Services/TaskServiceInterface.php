@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use App\Models\User;
 
 interface TaskServiceInterface
 {
@@ -12,5 +13,5 @@ interface TaskServiceInterface
     public function removeTaskFromMember(int $taskId, int $userId);
     public function reassignTaskToMember(int $taskId, int $newUserId);
     public function index(array $criteria);
-    public function getDeletedTasks(array $criteria = []);
+    public function getDeletedTasks(User $user, array $criteria = []);    
 }
