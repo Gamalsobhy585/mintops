@@ -105,12 +105,18 @@ class TaskController extends Controller
 
     return response()->json($tasks);
 }
-public function showTask($id)
+public function showTask($taskId)
 {
-    $task = $this->taskService->findTaskById($id);
+    $taskId = (int) $taskId; 
+    $task = $this->taskService->findTaskById($taskId);
     $this->authorize('view', $task);
 
     return new TaskResource($task);
 }
+public function getDeletedTasks(Request $request)
+{
+    $tasks = $this->taskService->getDeletedTasks($request->all());
 
+    return response()->json($tasks);
+}
 }

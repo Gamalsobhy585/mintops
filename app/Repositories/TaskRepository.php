@@ -60,4 +60,18 @@ class TaskRepository implements TaskRepositoryInterface
     {
         return Task::where('user_id', $userId)->get();
     }
+    public function getDeletedTasks(array $criteria = [])
+    {
+        $query = Task::onlyTrashed();
+
+        if (isset($criteria['team_id'])) {
+            $query->where('team_id', $criteria['team_id']);
+        }
+
+        if (isset($criteria['user_id'])) {
+            $query->where('user_id', $criteria['user_id']);
+        }
+
+        return $query->get();
+    }
 }
