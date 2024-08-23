@@ -14,9 +14,13 @@ class TaskPolicy
 
     public function update(User $user, Task $task)
     {
-        return $user->id === $task->user_id || $user->id === $task->user->leader->id;
+        $isTaskOwner = $user->id === $task->user_id;
+        $isTeamLeader = $user->id === $task->team->leader_id;
+    
+        return $isTaskOwner || $isTeamLeader;
     }
-
+    
+    
     public function delete(User $user, Task $task)
     {
         $teamLeader = $task->team->leader ?? null;
