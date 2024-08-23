@@ -96,5 +96,9 @@ class TaskService implements TaskServiceInterface
     
         return $this->taskRepository->getTasksByTeamId($teamId);
     }
-    
+    public function findTaskById(int $taskId)
+{
+    return $this->taskRepository->find($taskId);
+}
+
 }

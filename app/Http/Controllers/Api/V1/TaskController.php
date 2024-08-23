@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
@@ -103,6 +104,13 @@ class TaskController extends Controller
     $tasks = $this->taskService->index($request->all());
 
     return response()->json($tasks);
+}
+public function showTask($id)
+{
+    $task = $this->taskService->findTaskById($id);
+    $this->authorize('view', $task);
+
+    return new TaskResource($task);
 }
 
 }
